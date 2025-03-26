@@ -232,8 +232,86 @@ because if we have cls_students and cls_perc_eval, we can infer the
 number of students in class who completed evaluation. Any variance in
 score that cls_did_eval is able to explain would have already been
 explained by cls_perc_eval and cls_students. Adding it will not lead to
-a inrease in R^2, and itself won’t arise as a unique predictor.  
-I also want to exclude ethnicity as a predictor because I already know
-it is not a significant predictor.
+a inrease in R^2, and itself won’t arise as a unique predictor.
 
 ## Exercise 14
+
+``` r
+m_all <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  fit(score ~ rank + gender + language + age + cls_perc_eval + cls_students + 
+        cls_level + cls_profs + cls_credits + ethnicity + bty_avg, data = data)
+tidy(m_all)
+```
+
+    ## # A tibble: 13 × 5
+    ##    term                   estimate std.error statistic  p.value
+    ##    <chr>                     <dbl>     <dbl>     <dbl>    <dbl>
+    ##  1 (Intercept)            3.53      0.241       14.7   4.65e-40
+    ##  2 ranktenure track      -0.107     0.0820      -1.30  1.93e- 1
+    ##  3 ranktenured           -0.0450    0.0652      -0.691 4.90e- 1
+    ##  4 gendermale             0.179     0.0515       3.47  5.79e- 4
+    ##  5 languagenon-english   -0.127     0.108       -1.17  2.41e- 1
+    ##  6 age                   -0.00665   0.00308     -2.16  3.15e- 2
+    ##  7 cls_perc_eval          0.00570   0.00155      3.67  2.68e- 4
+    ##  8 cls_students           0.000445  0.000358     1.24  2.15e- 1
+    ##  9 cls_levelupper         0.0187    0.0556       0.337 7.37e- 1
+    ## 10 cls_profssingle       -0.00858   0.0514      -0.167 8.67e- 1
+    ## 11 cls_creditsone credit  0.509     0.117        4.35  1.70e- 5
+    ## 12 ethnicitynot minority  0.187     0.0775       2.41  1.63e- 2
+    ## 13 bty_avg                0.0613    0.0167       3.67  2.68e- 4
+
+``` r
+glance(m_all)
+```
+
+    ## # A tibble: 1 × 12
+    ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>    <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1     0.164         0.141 0.504      7.33 2.41e-12    12  -333.  694.  752.
+    ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
+An interesting observation is that ethnicity becomes a significant
+predictor here!?!
+
+## Exercise 15
+
+Our last model m_all seems to be good enough as it has the highest
+adjusted R^2 value so far: 0.1412. However, there are some predictors
+that aren’t significant, so I wonder what will happen if I exclude those
+variables. Below is a improved model.
+
+``` r
+m_all2 <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  fit(score ~ gender + age + cls_perc_eval + cls_credits + ethnicity + bty_avg, data = data)
+tidy(m_all2)
+```
+
+    ## # A tibble: 7 × 5
+    ##   term                  estimate std.error statistic  p.value
+    ##   <chr>                    <dbl>     <dbl>     <dbl>    <dbl>
+    ## 1 (Intercept)            3.41      0.202       16.9  5.70e-50
+    ## 2 gendermale             0.182     0.0499       3.65 2.93e- 4
+    ## 3 age                   -0.00509   0.00261     -1.95 5.19e- 2
+    ## 4 cls_perc_eval          0.00511   0.00144      3.55 4.30e- 4
+    ## 5 cls_creditsone credit  0.532     0.104        5.10 5.09e- 7
+    ## 6 ethnicitynot minority  0.241     0.0712       3.39 7.71e- 4
+    ## 7 bty_avg                0.0649    0.0164       3.97 8.41e- 5
+
+``` r
+glance(m_all2)
+```
+
+    ## # A tibble: 1 × 12
+    ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>    <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1     0.153         0.142 0.504      13.7 2.32e-14     6  -336.  688.  721.
+    ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
+The adjusted R^2 is even higher for this model: 0.1419. Just higher by a
+little bit, but this m_all2 model is much more parsimonious with fewer
+predictors. It makes it easier for me to write out the linear model too.
+
+score = 3.41 + 0.182(gender) -0.005(age) + 0.005(cls_perc_eval) +
+0.532(cls_credits) + 0.241(ethnicity) + 0.064(bty_avg)

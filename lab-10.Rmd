@@ -105,6 +105,30 @@ According to the output, this model is not significant, and that ethnicity is no
 
 ## Exercise 13
 I will not include cls_did_eval as an additional predictor. This is because if we have cls_students and cls_perc_eval, we can infer the number of students in class who completed evaluation. Any variance in score that cls_did_eval is able to explain would have already been explained by cls_perc_eval and cls_students. Adding it will not lead to a inrease in R^2, and itself won't arise as a unique predictor.     
-I also want to exclude ethnicity as a predictor because I already know it is not a significant predictor. 
 
 ## Exercise 14
+```{r everything}
+m_all <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  fit(score ~ rank + gender + language + age + cls_perc_eval + cls_students + 
+        cls_level + cls_profs + cls_credits + ethnicity + bty_avg, data = data)
+tidy(m_all)
+glance(m_all)
+```
+
+An interesting observation is that ethnicity becomes a significant predictor here!?!
+
+## Exercise 15 
+Our last model m_all seems to be good enough as it has the highest adjusted R^2 value so far: 0.1412. However, there are some predictors that aren't significant, so I wonder what will happen if I exclude those variables. Below is a improved model. 
+
+```{r improve}
+m_all2 <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  fit(score ~ gender + age + cls_perc_eval + cls_credits + ethnicity + bty_avg, data = data)
+tidy(m_all2)
+glance(m_all2)
+```
+
+The adjusted R^2 is even higher for this model: 0.1419. Just higher by a little bit, but this m_all2 model is much more parsimonious with fewer predictors. It makes it easier for me to write out the linear model too. 
+
+score = 3.41 + 0.182(gender) -0.005(age) + 0.005(cls_perc_eval) + 0.532(cls_credits) + 0.241(ethnicity) + 0.064(bty_avg)
