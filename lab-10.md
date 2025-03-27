@@ -309,9 +309,35 @@ glance(m_all2)
     ## 1     0.153         0.142 0.504      13.7 2.32e-14     6  -336.  688.  721.
     ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
 
-The adjusted R^2 is even higher for this model: 0.1419. Just higher by a
-little bit, but this m_all2 model is much more parsimonious with fewer
-predictors. It makes it easier for me to write out the linear model too.
+The adjusted R-squared is even higher for this model, 0.1419. Just
+higher by a little bit, but this m_all2 model is much more parsimonious
+with fewer predictors. It makes it easier for me to write out the linear
+model too.
 
 score = 3.41 + 0.182(gender) -0.005(age) + 0.005(cls_perc_eval) +
 0.532(cls_credits) + 0.241(ethnicity) + 0.064(bty_avg)
+
+## Exercise 16
+
+A categorical variable is cls_credits. The reference group is multi
+credit, which will be 0, and one credit will be 1. The slope is 0.532,
+this means that, all else holding constant, with one unit increase in
+the variable cls_credits, there will be a 0.532 increase in the course
+evals. In other words , one credit courses are, on average, 0.532 higher
+in their course eval scores than multi credit courses.  
+A numerical variable is cls_perc_eval, which is the percent of students
+in class who completed evaluation. The corresponding slope is 0.005.
+This means that with every additional 1% of students in class that
+completed evaluation, there is a 0.005 increase in the course evals, all
+else held constant.
+
+## Exercise 17
+
+Based on my final model, a professor who is relatively younger, male,
+teaches a one creidt course, white, gorgeous looking, and has more
+students fill out the evals will have a better eval score.
+
+## Exercise 18
+
+No, because the sample is only drawn from UT Austin, so it can only be
+generalized at this university.
